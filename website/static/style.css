@@ -1,0 +1,13 @@
+body {
+  background-color: #fff; /* Change this to your desired color or image */
+  background-image: url("/static/images/Background.png"); /* Optional: Add a background image */
+  color: #fff;
+}
+
+input {
+  color: #333; /* Sets all input elements to dark gray */
+}
+
+.custom-form-input {
+  color: #fff; /* Sets specific input class to white */
+}
