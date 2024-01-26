@@ -20,13 +20,30 @@ from pathlib import Path
 views = Blueprint('views', __name__)
 
 # Load custom model # best is very shitty
-model = torch.hub.load("ultralytics/yolov5","custom", path = "website/templates/best.pt") # , "custom", path = "./best_camel.pt", force_reload=True
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s') # , "custom", path = "./best_camel.pt", force_reload=True
+# Desired classes
+classes = [0, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+
 # Set Model Settings
 model.eval()
 model.conf = 0.75  # confidence threshold (0-1)
-model.iou = 0.45  # NMS Intersection over Union (IoU) threshold (0-1) 
+model.iou = 0.45  # NMS Intersection over Union (IoU) threshold (0-1)
+model.classes = classes # have model only detect wanted classes
 
+# # Load the model
+# model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
 
+# # Specify the classes you want to detect
+# classes = [0, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]  # Person, Bird, Cat, Dog, Horse, Sheep, Cow, Elephant, Bear, Zebra, Giraffe
+
+# # Get the image or video
+# img = 'path_to_your_image_or_video'  # replace with your image or video path
+
+# # Perform the detection
+# results = model(img, size=640)  # adjust the size to your needs
+
+# # Filter the results to only include the specified classes
+# filtered_results = results.xyxy[0][results.xyxy[0][:, 5].isin(classes)]
 
 # Generate webcam connection
 def gen_frames():
@@ -45,10 +62,8 @@ def gen_frames():
         ## remove ai model guessing and such    
             img = Image.open(io.BytesIO(frame))
             results = model(img, size=640)
-            
-            # print results to screen
-            results.print()  
-            
+
+
             #convert remove single-dimensional entries from the shape of an array
             img = np.squeeze(results.render()) #RGB
             # read image as BGR
