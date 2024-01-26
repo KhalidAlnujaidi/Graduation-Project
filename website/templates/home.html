@@ -1,9 +1,53 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
 
-<div style="width: 95%" >
+<div style="width: 95%">
   <h3>under here the video should be streaming</h3>
   <img src="{{ url_for('views.video_feed') }}" />
 </div>
+
+<div id="results">
+  <!-- Display the contents of name_frequency_dict -->
+  {% for key, value in name_frequency_dict.items() %}
+  <p>{{ key }}: {{ value }}</p>
+  {% endfor %}
+</div>
+
+<div style="width: 95%">
+  <img id="video-feed" />
+</div>
+
+<div id="results">
+  <!-- Display the contents of name_frequency_dict -->
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  var video = document.getElementById("video-feed");
+  var resultsDiv = document.getElementById("results");
+
+  // Function to update the results
+  function updateResults(data) {
+    resultsDiv.innerHTML = "";
+    for (var key in data) {
+      if (data.hasOwnProperty(key)) {
+        resultsDiv.innerHTML += "<p>" + key + ": " + data[key] + "</p>";
+      }
+    }
+  }
+
+  // Function to fetch and update the results periodically
+  function fetchData() {
+    fetch("/get_name_frequency_dict")
+      .then((response) => response.json())
+      .then((data) => {
+        updateResults(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  // Update the results every 2 seconds (adjust as needed)
+  setInterval(fetchData, 2000);
+</script>
 
 {% endblock %}
