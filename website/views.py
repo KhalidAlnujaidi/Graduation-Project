@@ -31,7 +31,7 @@ model.conf = 0.55  # confidence threshold (0-1)
 model.iou = 0.45  # NMS Intersection over Union (IoU) threshold (0-1)
 model.classes = classes # have model only detect 
 
-dummy_name_frequency_dict = {'person': 3, 'car': 2, 'tree': 1}
+#dummy_name_frequency_dict = {'person': 3, 'car': 2, 'tree': 1}
 
 name_frequency_dict = {}
 # Generate webcam connection
@@ -109,7 +109,7 @@ def home():
             db.session.commit()
             flash('Note added!', category='success')
 
-    return render_template("home.html", name_frequency_dict=dummy_name_frequency_dict, user=current_user)
+    return render_template("home.html", user=current_user)
 
 
 

@@ -6,13 +6,6 @@
   <img src="{{ url_for('views.video_feed') }}" />
 </div>
 
-<div id="results">
-  <!-- Display the contents of name_frequency_dict -->
-  {% for key, value in name_frequency_dict.items() %}
-  <p>{{ key }}: {{ value }}</p>
-  {% endfor %}
-</div>
-
 <div style="width: 95%">
   <img id="video-feed" />
 </div>
