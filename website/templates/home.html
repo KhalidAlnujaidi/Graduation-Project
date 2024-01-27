@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-
+<!-- 
 <div style="width: 95%">
   <h3>under here the video should be streaming</h3>
   <img src="{{ url_for('views.video_feed') }}" />
@@ -8,11 +8,26 @@
 
 <div style="width: 95%">
   <img id="video-feed" />
+</div> -->
+
+<!-- <div id="results"> -->
+  <!-- Display the contents of name_frequency_dict -->
+<!-- </div> -->
+
+<div style="width: 95%; display: flex; flex-wrap: wrap;">
+  <div style="flex: 1; margin-right: 10px;">
+    <h3>Video Streaming</h3>
+    <img src="{{ url_for('views.video_feed') }}" style="width: 100%;" />
+  </div>
+
+  <div style="flex: 1;">
+    <h3>Processed Results</h3>
+    <div id="results">
+      <!-- Display the contents of name_frequency_dict -->
+    </div>
+  </div>
 </div>
 
-<div id="results">
-  <!-- Display the contents of name_frequency_dict -->
-</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -28,6 +43,18 @@
       }
     }
   }
+
+//   function updateResults(data) {
+//   resultsDiv.innerHTML = "<table><tr><th>Object</th><th>Frequency</th></tr>";
+
+//   for (var key in data) {
+//     if (data.hasOwnProperty(key)) {
+//       resultsDiv.innerHTML += "<tr><td>" + key + "</td><td>" + data[key] + "</td></tr>";
+//     }
+//   }
+
+//   resultsDiv.innerHTML += "</table>";
+// }
 
   // Function to fetch and update the results periodically
   function fetchData() {
