@@ -11,50 +11,98 @@
 </div> -->
 
 <!-- <div id="results"> -->
-  <!-- Display the contents of name_frequency_dict -->
+<!-- Display the contents of name_frequency_dict -->
 <!-- </div> -->
 
-<div style="width: 95%; display: flex; flex-wrap: wrap;">
-  <div style="flex: 1; margin-right: 10px;">
+<style>
+  /* Add this style to control the size and positioning of the pie chart */
+  #pieChart {
+    width: 200px;
+    height: 200px;
+    margin-top: 10px; /* Adjust as needed */
+  }
+
+  /* Add this style to create a container for the video and results side by side */
+  #content-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  #video-container,
+  #results-container {
+    flex: 1;
+    margin-right: 10px;
+  }
+</style>
+
+<div style="width: 95%; display: flex; flex-wrap: wrap">
+  <div style="flex: 1; margin-right: 10px">
     <h3>Video Streaming</h3>
-    <img src="{{ url_for('views.video_feed') }}" style="width: 100%;" />
+    <img src="{{ url_for('views.video_feed') }}" style="width: 100%" />
   </div>
 
-  <div style="flex: 1;">
+  <div style="flex: 1">
     <h3>Processed Results</h3>
+    <canvas id="pieChart" width="150" height="150"></canvas>
     <div id="results">
       <!-- Display the contents of name_frequency_dict -->
     </div>
   </div>
 </div>
 
-
+<!-- Add this script tag after including jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
   var video = document.getElementById("video-feed");
   var resultsDiv = document.getElementById("results");
+  var pieChartCanvas = document.getElementById("pieChart");
 
-  // Function to update the results
+  // Function to update the results and create/update the pie chart
   function updateResults(data) {
     resultsDiv.innerHTML = "";
+
+    // Create data array for Chart.js
+    var labels = Object.keys(data);
+    var values = Object.values(data);
+
+    // Update the pie chart or create a new one
+    if (window.myPieChart) {
+      window.myPieChart.data.labels = labels;
+      window.myPieChart.data.datasets[0].data = values;
+      window.myPieChart.update();
+    } else {
+      // Create a new pie chart
+      var ctx = pieChartCanvas.getContext("2d");
+      window.myPieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: values,
+              backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                // Add more colors as needed
+              ],
+            },
+          ],
+        },
+      });
+    }
+
+    // Update the results div
     for (var key in data) {
       if (data.hasOwnProperty(key)) {
         resultsDiv.innerHTML += "<p>" + key + ": " + data[key] + "</p>";
       }
     }
   }
-
-//   function updateResults(data) {
-//   resultsDiv.innerHTML = "<table><tr><th>Object</th><th>Frequency</th></tr>";
-
-//   for (var key in data) {
-//     if (data.hasOwnProperty(key)) {
-//       resultsDiv.innerHTML += "<tr><td>" + key + "</td><td>" + data[key] + "</td></tr>";
-//     }
-//   }
-
-//   resultsDiv.innerHTML += "</table>";
-// }
 
   // Function to fetch and update the results periodically
   function fetchData() {

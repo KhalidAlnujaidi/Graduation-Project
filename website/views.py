@@ -33,6 +33,8 @@ model.classes = classes # have model only detect
 
 #dummy_name_frequency_dict = {'person': 3, 'car': 2, 'tree': 1}
 
+detect_boolean = True
+
 name_frequency_dict = {}
 # Generate webcam connection
 def gen_frames():
