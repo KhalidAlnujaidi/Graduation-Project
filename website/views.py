@@ -15,6 +15,8 @@ import torch
 from pathlib import Path
 import pandas as pd
 import json
+import time
+
 
 
 
@@ -24,6 +26,7 @@ views = Blueprint('views', __name__)
 model = torch.hub.load('ultralytics/yolov5', 'yolov5m') 
 # Desired classes
 classes = [0, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+# 21 is bear
 
 # Set Model Settings
 model.eval()
@@ -31,15 +34,24 @@ model.conf = 0.55  # confidence threshold (0-1)
 model.iou = 0.45  # NMS Intersection over Union (IoU) threshold (0-1)
 model.classes = classes # have model only detect 
 
-#dummy_name_frequency_dict = {'person': 3, 'car': 2, 'tree': 1}
 
-detect_boolean = True
+# Desired class for recording (Bear)
+desired_class_for_recording = 'bear'
+# Define recording parameters
+record_start_threshold = 0.5  # Adjust as needed
+record_stop_threshold = 0.2   # Adjust as needed
+record_duration = 10          # Duration to record after the bear leaves (in seconds)
+is_recording = False
+record_start_time = 0
+output_folder = "media"
+# Ensure the output folder exists
+os.makedirs(output_folder, exist_ok=True)
 
 name_frequency_dict = {}
 # Generate webcam connection
 def gen_frames():
+    global name_frequency_dict, is_recording, record_start_time
 
-    global name_frequency_dict
     cap=cv2.VideoCapture(0)
 
     # Read until video is completed
@@ -57,6 +69,8 @@ def gen_frames():
             #print(results.pandas().xyxy[0]['name'].tolist())
             names_column = results.pandas().xyxy[0]['name']
 
+            type(names_column)
+
             name_frequency_dict = {}
 
             # Iterate through the names and update the dictionary
@@ -68,6 +82,31 @@ def gen_frames():
 
             # Print or use the dictionary as needed
             print(name_frequency_dict)
+
+            # Check if the desired class (Bear) is detected
+            detected_bear = desired_class_for_recording in name_frequency_dict.keys()
+
+            if detected_bear and not is_recording:
+                is_recording = True
+                record_start_time = time.time()
+                print("Start Recording...")
+                # Define the video writer
+                video_filename = os.path.join(output_folder, f"recording_{time.strftime('%Y%m%d_%H%M%S')}.avi")
+                fourcc = cv2.VideoWriter_fourcc(*'XVID')
+                video_writer = cv2.VideoWriter(video_filename, fourcc, 20.0, (img_BGR.shape[1], img_BGR.shape[0]))
+
+            if is_recording:
+                # Write the frame to the video file
+                video_writer.write(img_BGR)
+
+            # Check if the bear is no longer detected and stop recording after a delay
+            if is_recording and not detected_bear and (time.time() - record_start_time) > record_duration:
+                is_recording = False
+                print("Stop Recording.")
+                # Release the video writer
+                video_writer.release()
+
+
 
             #convert remove single-dimensional entries from the shape of an array
             img = np.squeeze(results.render()) #RGB
