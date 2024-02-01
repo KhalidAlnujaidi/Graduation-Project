@@ -157,6 +157,12 @@ def home():
 @views.route('/media', methods=['GET', 'POST'])
 @login_required
 def media():
+    # Specify the path to the directory containing videos
+    video_directory = r'C:\Users\khalid\Desktop\Grad Project\media'
+
+    # Get a list of video files in the directory
+    videos = [file for file in os.listdir(video_directory) if file.endswith('.avi')]
 
 
-    return render_template("media.html", user=current_user)
+
+    return render_template("media.html",videos=videos, user=current_user)
