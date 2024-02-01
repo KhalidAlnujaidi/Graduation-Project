@@ -154,3 +154,9 @@ def home():
 
 
 
+@views.route('/media', methods=['GET', 'POST'])
+@login_required
+def media():
+
+
+    return render_template("media.html", user=current_user)
