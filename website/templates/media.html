@@ -6,10 +6,7 @@
   {% for video in videos %}
   <div class="video-item">
     <video width="320" height="240" controls>
-      <source
-        src="{{ url_for('static', filename='videos/' + video) }}"
-        type="video/mp4"
-      />
+      <source src="{{ url_for('static', filename=video) }}" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
     <p>{{ video }}</p>

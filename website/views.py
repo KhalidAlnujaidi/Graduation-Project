@@ -58,8 +58,8 @@ def start_recording(img_BGR):
     record_start_time = time.time()
     print("Start Recording...")
     # Define the video writer
-    video_filename = os.path.join(output_folder, f"recording_{time.strftime('%Y%m%d_%H%M%S')}.avi")
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    video_filename = os.path.join(output_folder, f"recording_{time.strftime('%Y%m%d_%H%M%S')}.mp4")
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Use 'mp4v' instead of 'XVID'
     video_writer = cv2.VideoWriter(video_filename, fourcc, 20.0, (img_BGR.shape[1], img_BGR.shape[0]))
 
 # Define the stop recording function
@@ -168,8 +168,6 @@ def media():
     video_directory = r'C:\Users\khalid\Desktop\Grad Project\media'
 
     # Get a list of video files in the directory
-    videos = [file for file in os.listdir(video_directory) if file.endswith('.avi')]
+    videos = [file for file in os.listdir(video_directory) if file.endswith('.mp4')]
 
-
-
-    return render_template("media.html",videos=videos, user=current_user)
+    return render_template("media.html", videos=videos, user=current_user)
