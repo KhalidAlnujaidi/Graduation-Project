@@ -159,7 +159,13 @@ def home():
 
     return render_template("home.html", user=current_user)
 
+import os
+from flask import send_from_directory
 
+@views.route('/play/<path:video_name>')
+def play_video(video_name):
+    videos_folder = r'C:\Users\khalid\Desktop\Grad Project\media'  # has to be absolute  Path to your videos folder
+    return send_from_directory(videos_folder, video_name, as_attachment=True)
 
 @views.route('/media', methods=['GET', 'POST'])
 @login_required
@@ -168,6 +174,8 @@ def media():
     video_directory = r'C:\Users\khalid\Desktop\Grad Project\media'
 
     # Get a list of video files in the directory
-    videos = [file for file in os.listdir(video_directory) if file.endswith('.mp4')]
+    
 
-    return render_template("media.html", videos=videos, user=current_user)
+    video_files = [file for file in os.listdir(video_directory) if file.endswith('.mp4')]
+
+    return render_template("media.html", video_files=video_files, user=current_user)

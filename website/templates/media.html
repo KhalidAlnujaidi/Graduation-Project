@@ -1,17 +1,12 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content%}
 
-<h3>welcome to media</h3>
-
-<div class="video-grid">
-  {% for video in videos %}
-  <div class="video-item">
-    <video width="320" height="240" controls>
-      <source src="{{ url_for('static', filename=video) }}" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-    <p>{{ video }}</p>
-  </div>
+<h1>Video Gallery</h1>
+<ul>
+  {% for video_file in video_files %}
+  <li>
+    <a href="/play/{{ video_file }}">{{ video_file }}</a>
+  </li>
   {% endfor %}
-</div>
+</ul>
 
 {% endblock %}
